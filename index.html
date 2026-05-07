@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portofolio Saya</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Styling tambahan agar komentar rapi */
+    .comment-display-inner {
+      margin-top: 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .comment-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      border-radius: 12px;
+      border-left: 3px solid #ff2e63;
+      animation: fadeIn 0.5s ease;
+    }
+    .comment-item strong {
+      display: block;
+      color: #ff2e63;
+      margin-bottom: 5px;
+      font-size: 0.95rem;
+    }
+    .comment-item p {
+      font-size: 0.9rem;
+      color: #ccc;
+      line-height: 1.4;
+    }
+    .view-more-container {
+      margin-top: 20px;
+      text-align: center;
+      display: none;
+    }
+    .btn-view-more {
+      background: transparent;
+      border: 1px solid #ff2e63;
+      color: #ff2e63;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: 0.3s;
+      display: inline-block;
+    }
+    .btn-view-more:hover {
+      background: #ff2e63;
+      color: white;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Efek Cursor Kedip untuk teks berjalan */
+    .cursor {
+      color: #ff2e63;
+      animation: blink 0.7s infinite;
+      font-weight: bold;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">Portofolio</div>
+    <nav class="nav-desktop">
+      <a href="#home" class="nav-link active">Home</a>
+      <a href="#about" class="nav-link">About</a>
+      <a href="#skills" class="nav-link">Skills</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#certificates" class="nav-link">Certificates</a>
+    </nav>
+    <div class="hamburger" id="hamburger">☰</div>
+  </header>
+
+  <section class="home" id="home">
+    <div class="hero-text">
+      <h2>Hello, I am</h2>
+      <div class="typing">
+        <span id="typing-text"></span><span class="cursor">|</span>
+      </div>
+      <div class="desc">
+        Saya adalah seorang pelajar yang fokus di bidang web development dan jaringan komputer. 
+        Saya suka membangun website yang clean dan interaktif, serta mempelajari bagaimana sistem jaringan bekerja di baliknya.
+      </div>
+      <div class="social-links">
+        <a href="https://github.com/fransisco-lgtm" target="_blank"><img src="../img/github.png" alt="Github"></a>
+        <a href="https://wa.me/6282284838714" target="_blank"><img src="../img/wa.png" alt="WhatsApp"></a>
+        <a href="https://www.instagram.com/fransisco_gamadhna?igsh=MWlrdWh5M3NxOGd0" target="_blank"><img src="../img/ig.png" alt="Instagram"></a>
+      </div>
+      <div class="buttons">
+        <a href="#contact-comment-wrapper" class="btn primary">Contact</a>
+        <a href="#projects" class="btn secondary">Projects</a>
+      </div>
+    </div>
+    <img src="../img/foto.png" class="profile-img" alt="foto">
+  </section>
+
+  <section class="about" id="about">
+    <div class="about-box">
+      <h2>About Me</h2>
+      <div class="about-content">
+        <p>
+          Saya <span>Fransisco Gamadhana</span>, berasal dari SMA Kusuma. Saya seorang pelajar yang memiliki ketertarikan mendalam di bidang teknologi, khususnya <span>Web Development</span> dan <span>Jaringan Komputer</span>.
+        </p>
+        <p>
+          Saya belajar secara mandiri (otodidak) untuk mengembangkan kemampuan saya dalam membuat website yang modern, responsif, serta memahami dasar-dasar networking. Dengan proses belajar ini, saya terus berusaha meningkatkan skill saya sebagai <span>Front-End Developer</span> dan <span>Network Engineer</span>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="skills">
+    <div class="about-box">
+      <h2>My Skills</h2>
+      <div class="skills-grid" id="skills-list">
+        <p style="color: #888; grid-column: 1/-1; text-align: center;">Loading Skills...</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="projects">
+    <div class="about-box">
+      <h2>My Projects</h2>
+      <div class="skills-grid" id="projects-list">
+        <p style="color: #888; grid-column: 1/-1; text-align: center;">Coming Soon...</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="certificates">
+    <div class="about-box">
+      <h2>Certificates</h2>
+      <div class="certificates-grid">
+        <p style="text-align: center; grid-column: 1 / -1;">Coming Soon...</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-comment-section" id="contact-comment-wrapper">
+    <div class="side-container">
+      
+      <div class="about-box side-box" id="contact">
+        <h2>Contact Me</h2>
+        <form class="contact-form">
+          <div class="input-group"><input type="text" id="wa_name" placeholder="Your Name" required></div>
+          <div class="input-group"><input type="email" id="wa_email" placeholder="Your Email" required></div>
+          <div class="input-group"><textarea id="wa_message" placeholder="Your Message" rows="5" required></textarea></div>
+          <button type="button" onclick="sendToWA()" class="btn primary">Send Message</button>
+        </form>
+      </div>
+
+      <div class="about-box side-box" id="comments">
+        <h2>Comments</h2>
+        <form class="contact-form" id="commentForm">
+          <div class="input-group"><input type="text" id="comment_name" placeholder="Name" required></div>
+          <div class="input-group"><textarea id="comment_message" placeholder="Message" rows="5" required></textarea></div>
+          <button type="button" onclick="postComment()" class="btn primary">Post Comment</button>
+        </form>
+        
+        <div id="comment-list" class="comment-display-inner"></div>
+
+        <div id="view-more-comments" class="view-more-container">
+          <a href="../comments/comments.html" class="btn-view-more">Lihat Komentar Lainnya</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="nav-mobile" id="navMobile">
+    <div class="close-btn" id="closeBtn">✕</div>
+    <a href="#home" class="nav-link active">Home</a>
+    <a href="#about" class="nav-link">About</a>
+    <a href="#skills" class="nav-link">Skills</a>
+    <a href="#projects" class="nav-link">Projects</a>
+    <a href="#certificates" class="nav-link">Certificates</a>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+  <script>
+    // Konfigurasi Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDKxcbRgZTSHrf_lw8tJgEJKJ6c1xXLh04",
+      authDomain: "login-f051d.firebaseapp.com",
+      databaseURL: "https://login-f051d-default-rtdb.firebaseio.com",
+      projectId: "login-f051d",
+      storageBucket: "login-f051d.firebasestorage.app",
+      messagingSenderId: "492117934029",
+      appId: "1:492117934029:web:4e13f5cf1efa57b0d34e84"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // --- EFEK TYPING (TEKS BERJALAN) ---
+    const textElement = document.getElementById("typing-text");
+    const texts = ["Front-End Developer", "Network Engineer"];
+    let i = 0, j = 0, deleting = false;
+
+    function type() {
+      const current = texts[i];
+      if (!deleting) {
+        j++;
+      } else {
+        j--;
+      }
+      
+      textElement.textContent = current.substring(0, j);
+
+      let speed = deleting ? 90 : 160;
+
+      if (!deleting && j === current.length) { 
+        speed = 1500; 
+        deleting = true; 
+      } else if (deleting && j === 0) { 
+        deleting = false; 
+        i = (i + 1) % texts.length; 
+        speed = 700; 
+      }
+
+      setTimeout(type, speed);
+    }
+
+    // Jalankan efek typing saat halaman dimuat
+    document.addEventListener("DOMContentLoaded", type);
+
+    // --- NAVIGASI HAMBURGER ---
+    const hb = document.getElementById('hamburger');
+    const nm = document.getElementById('navMobile');
+    const cb = document.getElementById('closeBtn');
+
+    hb.onclick = () => nm.classList.add('active');
+    cb.onclick = () => nm.classList.remove('active');
+
+    // --- FUNGSI POST KOMENTAR ---
+    function postComment() {
+      const name = document.getElementById('comment_name').value;
+      const message = document.getElementById('comment_message').value;
+
+      if (!name || !message) {
+        alert("Harap isi nama dan pesan!");
+        return;
+      }
+
+      const newCommentRef = database.ref('comments').push();
+      newCommentRef.set({
+        name: name,
+        message: message,
+        timestamp: Date.now()
+      }).then(() => {
+        alert("Komentar terkirim!");
+        document.getElementById('commentForm').reset();
+      });
+    }
+
+    // --- LOAD KOMENTAR ---
+    database.ref('comments').orderByChild('timestamp').on('value', (snapshot) => {
+      const commentList = document.getElementById('comment-list');
+      const viewMoreBtn = document.getElementById('view-more-comments');
+      commentList.innerHTML = "";
+      
+      let comments = [];
+      snapshot.forEach(child => {
+        comments.push({ id: child.key, ...child.val() });
+      });
+
+      comments.reverse();
+
+      const displayComments = comments.slice(0, 5);
+      displayComments.forEach(data => {
+        commentList.innerHTML += `
+          <div class="comment-item">
+            <strong>${data.name}</strong>
+            <p>${data.message}</p>
+          </div>
+        `;
+      });
+
+      if (comments.length > 5) {
+        viewMoreBtn.style.display = "block";
+      }
+    });
+
+    // --- FUNGSI WHATSAPP ---
+    function sendToWA() {
+      const name = document.getElementById('wa_name').value;
+      const email = document.getElementById('wa_email').value;
+      const message = document.getElementById('wa_message').value;
+
+      if (!name || !email || !message) { 
+        alert("Harap isi semua kolom!"); 
+        return; 
+      }
+
+      const phoneNumber = "6282284838714";
+      const fullMessage = `nama: ${name}%0AGmail: ${email}%0Apesan: ${message}`;
+      window.open(`https://wa.me/${phoneNumber}?text=${fullMessage}`, '_blank').focus();
+    }
+  </script>
+</body>
+        </html>
+
