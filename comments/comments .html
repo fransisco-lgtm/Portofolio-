@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar Komentar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .comment-container {
+      padding: 100px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .comment-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 92, 122, 0.2);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 600px;
+      transition: 0.3s;
+    }
+    .comment-card:hover {
+      border-color: #ff5c7a;
+      transform: translateY(-5px);
+    }
+    .comment-card h4 {
+      color: #ff5c7a;
+      margin-bottom: 5px;
+    }
+    .comment-card p {
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.5;
+    }
+    .comment-card span {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.4);
+      display: block;
+      margin-top: 10px;
+    }
+    .back-btn {
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="comment-container">
+    <div class="back-btn">
+      <a href="../index.html" class="btn secondary">← Kembali</a>
+    </div>
+    
+    <div class="about-box">
+      <h2>All Comments</h2>
+      <div id="display-area">
+        </div>
+    </div>
+  </div>
+
+  <script>
+    // Script khusus untuk menampilkan komentar di halaman ini
+    function loadComments() {
+      const displayArea = document.getElementById('display-area');
+      const comments = JSON.parse(localStorage.getItem('user_comments')) || [];
+
+      if (comments.length === 0) {
+        displayArea.innerHTML = '<p style="text-align:center; color:rgba(255,255,255,0.5);">Belum ada komentar.</p>';
+        return;
+      }
+
+      displayArea.innerHTML = comments.map(c => `
+        <div class="comment-card">
+          <h4>${c.name}</h4>
+          <p>${c.message}</p>
+          <span>${c.date}</span>
+        </div>
+      `).join('');
+    }
+
+    // Jalankan fungsi saat halaman dimuat
+    window.onload = loadComments;
+  </script>
+</body>
+</html>
