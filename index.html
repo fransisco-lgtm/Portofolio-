@@ -102,14 +102,25 @@
       height: 100%;
       background: #ff2e63;
     }
+
+    /* Navbar Active Style */
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .nav-link.active {
+      color: #ff2e63 !important;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
 
   <header>
     <div class="logo">Portofolio</div>
-    <nav class="nav-desktop">
-      <a href="#home" class="nav-link active">Home</a>
+    <nav class="nav-desktop" id="nav-desktop">
+      <a href="#home" class="nav-link">Home</a>
       <a href="#about" class="nav-link">About</a>
       <a href="#skills" class="nav-link">Skills</a>
       <a href="#projects" class="nav-link">Projects</a>
@@ -118,7 +129,7 @@
     <div class="hamburger" id="hamburger">☰</div>
   </header>
 
-  <section class="home" id="home">
+  <section class="home section" id="home">
     <div class="hero-text">
       <h2>Hello, I am</h2>
       <div class="typing">
@@ -141,7 +152,7 @@
     <img src="./img/foto.jpg" class="profile-img" alt="foto">
   </section>
 
-  <section class="about" id="about">
+  <section class="about section" id="about">
     <div class="about-box">
       <h2>About Me</h2>
       <div class="about-content">
@@ -155,7 +166,7 @@
     </div>
   </section>
 
-  <section class="about" id="skills">
+  <section class="about section" id="skills">
     <div class="about-box">
       <h2>My Skills</h2>
       <div class="skills-grid" id="skills-list">
@@ -164,7 +175,7 @@
     </div>
   </section>
 
-  <section class="about" id="projects">
+  <section class="about section" id="projects">
     <div class="about-box">
       <h2>My Projects</h2>
       <div class="skills-grid" id="projects-list">
@@ -173,7 +184,7 @@
     </div>
   </section>
 
-  <section class="about" id="certificates">
+  <section class="about section" id="certificates">
     <div class="about-box">
       <h2>Certificates</h2>
       <div class="certificates-grid" id="certificates-list">
@@ -182,7 +193,7 @@
     </div>
   </section>
 
-  <section class="contact-comment-section" id="contact-comment-wrapper">
+  <section class="contact-comment-section section" id="contact-comment-wrapper">
     <div class="side-container">
       
       <div class="about-box side-box" id="contact">
@@ -215,7 +226,7 @@
 
   <div class="nav-mobile" id="navMobile">
     <div class="close-btn" id="closeBtn">✕</div>
-    <a href="#home" class="nav-link active">Home</a>
+    <a href="#home" class="nav-link">Home</a>
     <a href="#about" class="nav-link">About</a>
     <a href="#skills" class="nav-link">Skills</a>
     <a href="#projects" class="nav-link">Projects</a>
@@ -239,6 +250,40 @@
 
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
+
+    // --- LOGIKA SCROLL SPY & NAVBAR ACTIVE ---
+    const sections = document.querySelectorAll('.section');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    window.addEventListener('scroll', () => {
+      let current = "";
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        // Deteksi jika scroll sudah melewati bagian tengah section
+        if (pageYOffset >= sectionTop - (sectionHeight / 3)) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        // Jika link href sama dengan ID section yang aktif
+        if (link.getAttribute('href').includes(current)) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // Menangani klik manual agar langsung berubah
+    navLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        navLinks.forEach(item => item.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById('navMobile').classList.remove('active');
+      });
+    });
 
     // --- LOAD SKILLS DARI FIREBASE ---
     database.ref('skills').on('value', (snapshot) => {
@@ -284,7 +329,7 @@
         }
     });
 
-    // --- EFEK TYPING (TEKS BERJALAN) ---
+    // --- EFEK TYPING ---
     const textElement = document.getElementById("typing-text");
     const texts = ["Front-End Developer", "Network Engineer"];
     let i = 0, j = 0, deleting = false;
@@ -298,7 +343,6 @@
       }
       
       textElement.textContent = current.substring(0, j);
-
       let speed = deleting ? 90 : 160;
 
       if (!deleting && j === current.length) { 
@@ -309,7 +353,6 @@
         i = (i + 1) % texts.length; 
         speed = 700; 
       }
-
       setTimeout(type, speed);
     }
 
@@ -337,7 +380,7 @@
       newCommentRef.set({
         name: name,
         message: message,
-        status: 'pending', // Secara default pending biar bisa diapprove di admin
+        status: 'pending', 
         timestamp: Date.now()
       }).then(() => {
         alert("Komentar terkirim! Menunggu persetujuan admin.");
@@ -345,7 +388,7 @@
       });
     }
 
-    // --- LOAD KOMENTAR (Hanya yang Status Approved) ---
+    // --- LOAD KOMENTAR ---
     database.ref('comments').orderByChild('timestamp').on('value', (snapshot) => {
       const commentList = document.getElementById('comment-list');
       const viewMoreBtn = document.getElementById('view-more-comments');
