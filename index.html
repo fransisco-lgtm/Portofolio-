@@ -19,7 +19,14 @@
       padding: 15px;
       border-radius: 12px;
       border-left: 3px solid #ff2e63;
-      animation: fadeIn 0.5s ease;
+      /* Animasi diatur via JS agar bisa berulang */
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.5s ease;
+    }
+    .comment-item.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
     .comment-item strong {
       display: block;
@@ -52,10 +59,6 @@
       background: #ff2e63;
       color: white;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
 
     /* Efek Cursor Kedip untuk teks berjalan */
     .cursor {
@@ -75,7 +78,14 @@
       padding: 20px;
       border-radius: 15px;
       text-align: center;
-      transition: 0.3s;
+      transition: 0.4s;
+      /* Animasi Scroll Berulang */
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    .skill-card.visible {
+      opacity: 1;
+      transform: scale(1);
     }
     .skill-card:hover {
       background: rgba(255, 46, 99, 0.05);
@@ -113,6 +123,17 @@
     .nav-link.active {
       color: #ff2e63 !important;
       font-weight: 600;
+    }
+
+    /* Penyesuaian agar section About Box juga bisa beranimasi */
+    .about-box {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease-out;
+    }
+    .about-box.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
@@ -255,6 +276,22 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
+    // --- BARU: FUNGSI ANIMASI SCROLL BERULANG ---
+    const scrollObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible'); // Hapus class agar animasi ulang saat scroll balik
+        }
+      });
+    }, { threshold: 0.1 });
+
+    function refreshObservers() {
+      const targets = document.querySelectorAll('.skill-card, .about-box, .comment-item');
+      targets.forEach(t => scrollObserver.observe(t));
+    }
+
     // --- LOGIKA SCROLL SPY & NAVBAR ACTIVE ---
     const sections = document.querySelectorAll('.section');
     const navLinks = document.querySelectorAll('.nav-link');
@@ -269,7 +306,6 @@
         }
       });
 
-      // Hanya ubah class active jika sudah mulai scroll
       if (current !== "") {
         navLinks.forEach(link => {
           link.classList.remove('active');
@@ -280,7 +316,6 @@
       }
     });
 
-    // Navigasi manual (klik link)
     navLinks.forEach(link => {
         link.addEventListener('click', function() {
             navLinks.forEach(l => l.classList.remove('active'));
@@ -314,6 +349,7 @@
                         </div>
                     </div>`;
             });
+            refreshObservers(); // Aktifkan observer untuk elemen baru
         }
     });
 
@@ -331,6 +367,7 @@
                         <a href="${data.link}" target="_blank" style="color:#ff2e63; font-size:0.8rem; text-decoration:none;">View Project</a>
                     </div>`;
             });
+            refreshObservers();
         }
     });
 
@@ -347,7 +384,10 @@
       else if (deleting && j === 0) { deleting = false; i = (i + 1) % texts.length; speed = 700; }
       setTimeout(type, speed);
     }
-    document.addEventListener("DOMContentLoaded", type);
+    document.addEventListener("DOMContentLoaded", () => {
+      type();
+      refreshObservers(); // Inisialisasi awal
+    });
 
     // --- FUNGSI WHATSAPP ---
     function sendToWA() {
@@ -381,7 +421,9 @@
       comments.reverse().slice(0, 5).forEach(data => {
         commentList.innerHTML += `<div class="comment-item"><strong>${data.name}</strong><p>${data.message}</p></div>`;
       });
+      refreshObservers();
     });
   </script>
 </body>
-</html>
+            </html>
+            
