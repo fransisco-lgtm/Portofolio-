@@ -103,12 +103,13 @@
       background: #ff2e63;
     }
 
-    /* Navbar Active Style */
+    /* Navbar Link Style */
     .nav-link {
       color: white;
       text-decoration: none;
       transition: color 0.3s ease;
     }
+    /* Warna saat aktif (Merah Pink) */
     .nav-link.active {
       color: #ff2e63 !important;
       font-weight: 600;
@@ -120,14 +121,27 @@
   <header>
     <div class="logo">Portofolio</div>
     <nav class="nav-desktop" id="nav-desktop">
-      <a href="#home" class="nav-link">Home</a>
+      <a href="#home" class="nav-link active">Home</a>
       <a href="#about" class="nav-link">About</a>
       <a href="#skills" class="nav-link">Skills</a>
       <a href="#projects" class="nav-link">Projects</a>
       <a href="#certificates" class="nav-link">Certificates</a>
+      <a href="#contact-comment-wrapper" class="nav-link">Contact</a> 
+      <a href="#comments" class="nav-link">Comment</a> 
     </nav>
     <div class="hamburger" id="hamburger">☰</div>
   </header>
+
+  <div class="nav-mobile" id="navMobile">
+    <div class="close-btn" id="closeBtn">✕</div>
+    <a href="#home" class="nav-link active">Home</a>
+    <a href="#about" class="nav-link">About</a>
+    <a href="#skills" class="nav-link">Skills</a>
+    <a href="#projects" class="nav-link">Projects</a>
+    <a href="#certificates" class="nav-link">Certificates</a>
+    <a href="#contact-comment-wrapper" class="nav-link">Contact</a>
+    <a href="#comments" class="nav-link">Comment</a>
+  </div>
 
   <section class="home section" id="home">
     <div class="hero-text">
@@ -201,7 +215,7 @@
         <form class="contact-form">
           <div class="input-group"><input type="text" id="wa_name" placeholder="Your Name" required></div>
           <div class="input-group"><input type="email" id="wa_email" placeholder="Your Email" required></div>
-          <div class="input-group"><textarea id="wa_message" placeholder="Your Message" rows="5" required></textarea></div>
+          <div class="input-group"><input id="wa_message" placeholder="Your Message" rows="5" required></input></div>
           <button type="button" onclick="sendToWA()" class="btn primary">Send Message</button>
         </form>
       </div>
@@ -224,20 +238,10 @@
     </div>
   </section>
 
-  <div class="nav-mobile" id="navMobile">
-    <div class="close-btn" id="closeBtn">✕</div>
-    <a href="#home" class="nav-link">Home</a>
-    <a href="#about" class="nav-link">About</a>
-    <a href="#skills" class="nav-link">Skills</a>
-    <a href="#projects" class="nav-link">Projects</a>
-    <a href="#certificates" class="nav-link">Certificates</a>
-  </div>
-
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
   <script>
-    // Konfigurasi Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDKxcbRgZTSHrf_lw8tJgEJKJ6c1xXLh04",
       authDomain: "login-f051d.firebaseapp.com",
@@ -257,39 +261,46 @@
 
     window.addEventListener('scroll', () => {
       let current = "";
-
       sections.forEach(section => {
         const sectionTop = section.offsetTop;
         const sectionHeight = section.clientHeight;
-        // Deteksi jika scroll sudah melewati bagian tengah section
         if (pageYOffset >= sectionTop - (sectionHeight / 3)) {
           current = section.getAttribute('id');
         }
       });
 
-      navLinks.forEach(link => {
-        link.classList.remove('active');
-        // Jika link href sama dengan ID section yang aktif
-        if (link.getAttribute('href').includes(current)) {
-          link.classList.add('active');
-        }
-      });
+      // Hanya ubah class active jika sudah mulai scroll
+      if (current !== "") {
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href').includes(current)) {
+            link.classList.add('active');
+          }
+        });
+      }
     });
 
-    // Menangani klik manual agar langsung berubah
+    // Navigasi manual (klik link)
     navLinks.forEach(link => {
-      link.addEventListener('click', function() {
-        navLinks.forEach(item => item.classList.remove('active'));
-        this.classList.add('active');
-        document.getElementById('navMobile').classList.remove('active');
-      });
+        link.addEventListener('click', function() {
+            navLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById('navMobile').classList.remove('active');
+        });
     });
 
-    // --- LOAD SKILLS DARI FIREBASE ---
+    // --- NAVIGASI HAMBURGER SIDEBAR ---
+    const hb = document.getElementById('hamburger');
+    const nm = document.getElementById('navMobile');
+    const cb = document.getElementById('closeBtn');
+
+    hb.onclick = () => nm.classList.add('active');
+    cb.onclick = () => nm.classList.remove('active');
+
+    // --- LOAD SKILLS ---
     database.ref('skills').on('value', (snapshot) => {
         const skillsList = document.getElementById('skills-list');
         skillsList.innerHTML = "";
-        
         if (snapshot.exists()) {
             snapshot.forEach(child => {
                 const data = child.val();
@@ -301,15 +312,12 @@
                         <div class="skill-level-bar">
                             <div class="skill-progress" style="width: ${data.level}%"></div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
-        } else {
-            skillsList.innerHTML = `<p style="color: #888; grid-column: 1/-1; text-align: center;">Belum ada skill ditambahkan.</p>`;
         }
     });
 
-    // --- LOAD PROJECTS DARI FIREBASE ---
+    // --- LOAD PROJECTS ---
     database.ref('projects').on('value', (snapshot) => {
         const projectsList = document.getElementById('projects-list');
         projectsList.innerHTML = "";
@@ -321,121 +329,59 @@
                         <img src="${data.thumbnail}" style="width:100%; height:120px; object-fit:cover; border-radius:10px;">
                         <h3 style="margin-top:10px;">${data.title}</h3>
                         <a href="${data.link}" target="_blank" style="color:#ff2e63; font-size:0.8rem; text-decoration:none;">View Project</a>
-                    </div>
-                `;
+                    </div>`;
             });
-        } else {
-            projectsList.innerHTML = `<p style="color: #888; grid-column: 1/-1; text-align: center;">Coming Soon...</p>`;
         }
     });
 
-    // --- EFEK TYPING ---
+    // --- TYPING EFFECT ---
     const textElement = document.getElementById("typing-text");
     const texts = ["Front-End Developer", "Network Engineer"];
     let i = 0, j = 0, deleting = false;
-
     function type() {
       const current = texts[i];
-      if (!deleting) {
-        j++;
-      } else {
-        j--;
-      }
-      
+      if (!deleting) j++; else j--;
       textElement.textContent = current.substring(0, j);
       let speed = deleting ? 90 : 160;
-
-      if (!deleting && j === current.length) { 
-        speed = 1500; 
-        deleting = true; 
-      } else if (deleting && j === 0) { 
-        deleting = false; 
-        i = (i + 1) % texts.length; 
-        speed = 700; 
-      }
+      if (!deleting && j === current.length) { speed = 1500; deleting = true; } 
+      else if (deleting && j === 0) { deleting = false; i = (i + 1) % texts.length; speed = 700; }
       setTimeout(type, speed);
     }
-
     document.addEventListener("DOMContentLoaded", type);
-
-    // --- NAVIGASI HAMBURGER ---
-    const hb = document.getElementById('hamburger');
-    const nm = document.getElementById('navMobile');
-    const cb = document.getElementById('closeBtn');
-
-    hb.onclick = () => nm.classList.add('active');
-    cb.onclick = () => nm.classList.remove('active');
-
-    // --- FUNGSI POST KOMENTAR ---
-    function postComment() {
-      const name = document.getElementById('comment_name').value;
-      const message = document.getElementById('comment_message').value;
-
-      if (!name || !message) {
-        alert("Harap isi nama dan pesan!");
-        return;
-      }
-
-      const newCommentRef = database.ref('comments').push();
-      newCommentRef.set({
-        name: name,
-        message: message,
-        status: 'pending', 
-        timestamp: Date.now()
-      }).then(() => {
-        alert("Komentar terkirim! Menunggu persetujuan admin.");
-        document.getElementById('commentForm').reset();
-      });
-    }
-
-    // --- LOAD KOMENTAR ---
-    database.ref('comments').orderByChild('timestamp').on('value', (snapshot) => {
-      const commentList = document.getElementById('comment-list');
-      const viewMoreBtn = document.getElementById('view-more-comments');
-      commentList.innerHTML = "";
-      
-      let comments = [];
-      snapshot.forEach(child => {
-          const val = child.val();
-          if(val.status === 'approved') {
-              comments.push({ id: child.key, ...val });
-          }
-      });
-
-      comments.reverse();
-
-      const displayComments = comments.slice(0, 5);
-      displayComments.forEach(data => {
-        const replyHtml = data.adminReply ? `<div style="margin-top:10px; padding:10px; background:rgba(255,255,255,0.05); border-left:2px solid #fbbf24; font-size:0.8rem; font-style:italic;"><strong>Admin:</strong> ${data.adminReply}</div>` : "";
-        commentList.innerHTML += `
-          <div class="comment-item">
-            <strong>${data.name}</strong>
-            <p>${data.message || data.comment}</p>
-            ${replyHtml}
-          </div>
-        `;
-      });
-
-      if (comments.length > 5) {
-        viewMoreBtn.style.display = "block";
-      }
-    });
 
     // --- FUNGSI WHATSAPP ---
     function sendToWA() {
       const name = document.getElementById('wa_name').value;
       const email = document.getElementById('wa_email').value;
       const message = document.getElementById('wa_message').value;
-
-      if (!name || !email || !message) { 
-        alert("Harap isi semua kolom!"); 
-        return; 
-      }
-
-      const phoneNumber = "6282284838714";
-      const fullMessage = `nama: ${name}%0AGmail: ${email}%0Apesan: ${message}`;
-      window.open(`https://wa.me/${phoneNumber}?text=${fullMessage}`, '_blank').focus();
+      if (!name || !email || !message) { alert("Isi semua kolom!"); return; }
+      window.open(`https://wa.me/6282284838714?text=Nama: ${name}%0AGmail: ${email}%0APesan: ${message}`, '_blank');
     }
+
+    // --- FUNGSI COMMENT ---
+    function postComment() {
+      const name = document.getElementById('comment_name').value;
+      const message = document.getElementById('comment_message').value;
+      if (!name || !message) { alert("Isi data!"); return; }
+      database.ref('comments').push().set({
+        name: name, message: message, status: 'pending', timestamp: Date.now()
+      }).then(() => {
+        alert("Terkirim! Menunggu persetujuan.");
+        document.getElementById('commentForm').reset();
+      });
+    }
+
+    database.ref('comments').orderByChild('timestamp').on('value', (snapshot) => {
+      const commentList = document.getElementById('comment-list');
+      commentList.innerHTML = "";
+      let comments = [];
+      snapshot.forEach(child => {
+          if(child.val().status === 'approved') comments.push(child.val());
+      });
+      comments.reverse().slice(0, 5).forEach(data => {
+        commentList.innerHTML += `<div class="comment-item"><strong>${data.name}</strong><p>${data.message}</p></div>`;
+      });
+    });
   </script>
 </body>
 </html>
