@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Styling tambahan agar komentar rapi */
     .comment-display-inner {
       margin-top: 25px;
       display: flex;
@@ -19,7 +18,6 @@
       padding: 15px;
       border-radius: 12px;
       border-left: 3px solid #ff2e63;
-      /* Animasi diatur via JS agar bisa berulang */
       opacity: 0;
       transform: translateY(10px);
       transition: all 0.5s ease;
@@ -60,7 +58,6 @@
       color: white;
     }
 
-    /* Efek Cursor Kedip untuk teks berjalan */
     .cursor {
       color: #ff2e63;
       animation: blink 0.7s infinite;
@@ -71,7 +68,6 @@
       50% { opacity: 0; }
     }
 
-    /* Skill Card Style */
     .skill-card {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 46, 99, 0.2);
@@ -79,9 +75,11 @@
       border-radius: 15px;
       text-align: center;
       transition: 0.4s;
-      /* Animasi Scroll Berulang */
       opacity: 0;
       transform: scale(0.9);
+      display: flex;
+      flex-direction: column;
+      height: 100%; /* Menyamakan tinggi card */
     }
     .skill-card.visible {
       opacity: 1;
@@ -91,15 +89,16 @@
       background: rgba(255, 46, 99, 0.05);
       transform: translateY(-5px);
     }
-    .skill-card img {
+    .skill-card img.icon-skill {
       width: 50px;
       height: 50px;
       object-fit: contain;
-      margin-bottom: 15px;
+      margin: 0 auto 15px;
     }
     .skill-card h3 {
-      font-size: 1rem;
+      font-size: 1.1rem;
       margin-bottom: 8px;
+      color: #fff;
     }
     .skill-level-bar {
       width: 100%;
@@ -113,19 +112,83 @@
       background: #ff2e63;
     }
 
-    /* Navbar Link Style */
+    /* PROJECT STYLING */
+    #projects-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .project-desc {
+      font-size: 0.85rem;
+      color: #bbb;
+      margin: 10px 0;
+      text-align: left;
+      max-height: 80px; /* Batasi tinggi deskripsi */
+      overflow-y: auto; /* Bisa di scroll */
+      padding-right: 5px;
+      line-height: 1.5;
+    }
+    /* Mempercantik Scrollbar Deskripsi */
+    .project-desc::-webkit-scrollbar { width: 4px; }
+    .project-desc::-webkit-scrollbar-thumb { background: #ff2e63; border-radius: 10px; }
+
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+    .tech-badge {
+      background: rgba(255, 46, 99, 0.1);
+      border: 1px solid rgba(255, 46, 99, 0.3);
+      color: #ff2e63;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .project-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: auto; /* Paksa tombol ke bawah */
+    }
+    .btn-proj {
+      padding: 10px 12px;
+      font-size: 0.75rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: 0.3s;
+      flex: 1;
+      text-align: center;
+      font-weight: 600;
+    }
+    .btn-preview {
+      background: #ff2e63;
+      color: white;
+    }
+    .btn-source {
+      border: 1px solid #ff2e63;
+      color: #ff2e63;
+    }
+    .btn-proj:hover {
+      opacity: 0.8;
+      transform: translateY(-2px);
+    }
+
     .nav-link {
       color: white;
       text-decoration: none;
       transition: color 0.3s ease;
     }
-    /* Warna saat aktif (Merah Pink) */
     .nav-link.active {
       color: #ff2e63 !important;
       font-weight: 600;
     }
 
-    /* Penyesuaian agar section About Box juga bisa beranimasi */
     .about-box {
       opacity: 0;
       transform: translateY(30px);
@@ -134,6 +197,12 @@
     .about-box.visible {
       opacity: 1;
       transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      #projects-list {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -213,7 +282,7 @@
   <section class="about section" id="projects">
     <div class="about-box">
       <h2>My Projects</h2>
-      <div class="skills-grid" id="projects-list">
+      <div id="projects-list">
         <p style="color: #888; grid-column: 1/-1; text-align: center;">Coming Soon...</p>
       </div>
     </div>
@@ -230,7 +299,6 @@
 
   <section class="contact-comment-section section" id="contact-comment-wrapper">
     <div class="side-container">
-      
       <div class="about-box side-box" id="contact">
         <h2>Contact Me</h2>
         <form class="contact-form">
@@ -248,14 +316,11 @@
           <div class="input-group"><textarea id="comment_message" placeholder="Message" rows="5" required></textarea></div>
           <button type="button" onclick="postComment()" class="btn primary">Post Comment</button>
         </form>
-        
         <div id="comment-list" class="comment-display-inner"></div>
-
         <div id="view-more-comments" class="view-more-container">
           <a href="../comments/comments.html" class="btn-view-more">Lihat Komentar Lainnya</a>
         </div>
       </div>
-
     </div>
   </section>
 
@@ -276,13 +341,12 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // --- BARU: FUNGSI ANIMASI SCROLL BERULANG ---
     const scrollObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
         } else {
-          entry.target.classList.remove('visible'); // Hapus class agar animasi ulang saat scroll balik
+          entry.target.classList.remove('visible'); 
         }
       });
     }, { threshold: 0.1 });
@@ -292,45 +356,60 @@
       targets.forEach(t => scrollObserver.observe(t));
     }
 
-    // --- LOGIKA SCROLL SPY & NAVBAR ACTIVE ---
-    const sections = document.querySelectorAll('.section');
-    const navLinks = document.querySelectorAll('.nav-link');
-
-    window.addEventListener('scroll', () => {
-      let current = "";
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (pageYOffset >= sectionTop - (sectionHeight / 3)) {
-          current = section.getAttribute('id');
+    function fixImageUrl(url) {
+        if(!url) return "";
+        let link = url.trim();
+        if (link.includes('imgur.com') && !link.includes('i.imgur.com')) {
+            link = link.replace('imgur.com', 'i.imgur.com') + '.jpg';
         }
-      });
+        if (link.includes('postimg.cc') && !link.includes('i.postimg.cc')) {
+            link = link.replace('postimg.cc', 'i.postimg.cc') + '.png';
+        }
+        return link;
+    }
 
-      if (current !== "") {
-        navLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href').includes(current)) {
-            link.classList.add('active');
-          }
-        });
-      }
+    // --- LOAD PROJECTS ---
+    database.ref('projects').on('value', (snapshot) => {
+        const projectsList = document.getElementById('projects-list');
+        projectsList.innerHTML = "";
+        if (snapshot.exists()) {
+            snapshot.forEach(child => {
+                const data = child.val();
+                
+                const rawImg = data.thumbnail || data.imageUrl || data.image || data.foto || '';
+                const finalImg = fixImageUrl(rawImg);
+
+                // Deskripsi & Teknologi Logic
+                const description = data.desc || data.description || "Tidak ada deskripsi.";
+                const techArray = data.tech ? data.tech.split(',') : ["Web"];
+
+                // Build Tech Badges HTML
+                let techHTML = '<div class="tech-stack">';
+                techArray.forEach(t => {
+                    techHTML += `<span class="tech-badge">${t.trim()}</span>`;
+                });
+                techHTML += '</div>';
+
+                const sourceLink = data.source || data.github || "#";
+                const liveLink = data.link || data.demo || "#";
+
+                projectsList.innerHTML += `
+                    <div class="skill-card">
+                        <img src="${finalImg}" 
+                             onerror="this.src='https://via.placeholder.com/300x180?text=Gambar+Tidak+Ditemukan'" 
+                             style="width:100%; height:160px; object-fit:cover; border-radius:10px; background:#111;">
+                        <h3 style="margin-top:15px;">${data.title}</h3>
+                        <div class="project-desc">${description}</div>
+                        ${techHTML}
+                        <div class="project-buttons">
+                            <a href="${liveLink}" target="_blank" class="btn-proj btn-preview">Preview</a>
+                            <a href="${sourceLink}" target="_blank" class="btn-proj btn-source">Source Code</a>
+                        </div>
+                    </div>`;
+            });
+            refreshObservers();
+        }
     });
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            navLinks.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-            document.getElementById('navMobile').classList.remove('active');
-        });
-    });
-
-    // --- NAVIGASI HAMBURGER SIDEBAR ---
-    const hb = document.getElementById('hamburger');
-    const nm = document.getElementById('navMobile');
-    const cb = document.getElementById('closeBtn');
-
-    hb.onclick = () => nm.classList.add('active');
-    cb.onclick = () => nm.classList.remove('active');
 
     // --- LOAD SKILLS ---
     database.ref('skills').on('value', (snapshot) => {
@@ -341,7 +420,7 @@
                 const data = child.val();
                 skillsList.innerHTML += `
                     <div class="skill-card">
-                        <img src="${data.iconUrl}" onerror="this.src='https://via.placeholder.com/50'">
+                        <img class="icon-skill" src="${data.iconUrl}" onerror="this.src='https://via.placeholder.com/50'">
                         <h3>${data.name}</h3>
                         <p style="font-size:0.7rem; color:#888; margin-bottom:5px;">${data.cat}</p>
                         <div class="skill-level-bar">
@@ -349,29 +428,11 @@
                         </div>
                     </div>`;
             });
-            refreshObservers(); // Aktifkan observer untuk elemen baru
-        }
-    });
-
-    // --- LOAD PROJECTS ---
-    database.ref('projects').on('value', (snapshot) => {
-        const projectsList = document.getElementById('projects-list');
-        projectsList.innerHTML = "";
-        if (snapshot.exists()) {
-            snapshot.forEach(child => {
-                const data = child.val();
-                projectsList.innerHTML += `
-                    <div class="skill-card">
-                        <img src="${data.thumbnail}" style="width:100%; height:120px; object-fit:cover; border-radius:10px;">
-                        <h3 style="margin-top:10px;">${data.title}</h3>
-                        <a href="${data.link}" target="_blank" style="color:#ff2e63; font-size:0.8rem; text-decoration:none;">View Project</a>
-                    </div>`;
-            });
             refreshObservers();
         }
     });
 
-    // --- TYPING EFFECT ---
+    // --- Typing Effect ---
     const textElement = document.getElementById("typing-text");
     const texts = ["Front-End Developer", "Network Engineer"];
     let i = 0, j = 0, deleting = false;
@@ -384,12 +445,12 @@
       else if (deleting && j === 0) { deleting = false; i = (i + 1) % texts.length; speed = 700; }
       setTimeout(type, speed);
     }
+
     document.addEventListener("DOMContentLoaded", () => {
       type();
-      refreshObservers(); // Inisialisasi awal
+      refreshObservers();
     });
 
-    // --- FUNGSI WHATSAPP ---
     function sendToWA() {
       const name = document.getElementById('wa_name').value;
       const email = document.getElementById('wa_email').value;
@@ -398,7 +459,6 @@
       window.open(`https://wa.me/6282284838714?text=Nama: ${name}%0AGmail: ${email}%0APesan: ${message}`, '_blank');
     }
 
-    // --- FUNGSI COMMENT ---
     function postComment() {
       const name = document.getElementById('comment_name').value;
       const message = document.getElementById('comment_message').value;
@@ -423,7 +483,13 @@
       });
       refreshObservers();
     });
+
+    const hb = document.getElementById('hamburger');
+    const nm = document.getElementById('navMobile');
+    const cb = document.getElementById('closeBtn');
+    hb.onclick = () => nm.classList.add('active');
+    cb.onclick = () => nm.classList.remove('active');
   </script>
 </body>
-            </html>
-            
+  </html>
+  
